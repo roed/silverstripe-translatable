@@ -241,6 +241,9 @@ class Translatable extends DataExtension implements PermissionProvider {
 		if((isset($_GET['locale']) && !$langsAvailable) || (isset($_GET['locale']) && in_array($_GET['locale'], $langsAvailable))) {
 			// get from GET parameter
 			self::set_current_locale($_GET['locale']);
+		} else if((isset($_POST['Locale']) && !$langsAvailable) || (isset($_POST['Locale']) && in_array($_POST['Locale'], $langsAvailable))) {
+			// get from POST parameter
+			self::set_current_locale($_POST['Locale']);
 		} else {
 			self::set_current_locale(self::default_locale());
 		}
@@ -933,7 +936,13 @@ class Translatable extends DataExtension implements PermissionProvider {
 			$existingTransHTML = '<ul>';
 			foreach($alreadyTranslatedLocales as $langCode) {		
 				$existingTranslation = $this->owner->getTranslation($langCode);
-				if($existingTranslation && $existingTranslation->hasMethod('CMSEditLink')) {
+				if ($existingTranslation && $this->owner->ClassName == "SiteConfig") {					
+					$existingTransHTML .= sprintf('<li><a href="%s">%s</a></li>',
+						sprintf('%s/?locale=%s', Director::baseURL()."admin/settings", $langCode),
+						i18n::get_locale_name($langCode)
+					);
+				}
+				else if($existingTranslation && $existingTranslation->hasMethod('CMSEditLink')) {
 					$existingTransHTML .= sprintf('<li><a href="%s">%s</a></li>',
 						sprintf('%s/?locale=%s', $existingTranslation->CMSEditLink(), $langCode),
 						i18n::get_locale_name($langCode)

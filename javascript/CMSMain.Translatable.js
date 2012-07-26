@@ -60,5 +60,16 @@
 				return false;
 			}
 		});
+		
+		/* for adding siteconfig translations */
+		$('.CMSSettingsController :input[name=action_createtranslation]').entwine({			
+			onclick: function(e) {			
+				var newurl = document.location.href.split("?");
+				newurl = newurl[0];
+				document.location = newurl+"?locale="+$('select.languagedropdown').val()
+				e.preventDefault();
+				return false;
+			}
+		});
 	});
 }(jQuery));
